@@ -37,7 +37,7 @@ const Mainpage = () => {
       </div>
       <div className='sm:pl-[20%] md:pl-[20%] lg:pl-[20%] w-[100vw]'>
         <Routes>
-          <Route index path='dashboard'  element={<Dashboard />} />
+          <Route index path=''  element={<Dashboard />} />
           <Route path='Results' element={<Results />} />
           <Route path='feedback' element={<Feedback />} />
           <Route path='displaydata' element={<DisplayData />} />

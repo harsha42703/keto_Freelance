@@ -79,7 +79,7 @@ const Sidebar = () => {
 
             <li>
               <NavLink
-                to="/dashboard"
+                to="/"
                 className={({ isActive }) => isActive ? "flex items-center p-2 text-gray-900 rounded-2xl bg-cyan-200" : "flex items-center p-2 text-gray-900 rounded-2xl hover:bg-cyan-100 group"}
                 onClick={closeSidebar}
               >
