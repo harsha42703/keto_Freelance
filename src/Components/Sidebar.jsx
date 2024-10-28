@@ -4,11 +4,13 @@ import dp from '../Assets/dp.png';
 import { PiExamFill } from "react-icons/pi";
 import { TbLayoutDashboardFilled } from "react-icons/tb";
 import { HiAcademicCap } from "react-icons/hi2";
-import { MdEmojiEvents, MdFeedback, MdWork } from "react-icons/md";
+import { MdFeedback } from "react-icons/md";
+import { useUser } from '../Context/userContext';
 
-const Sidebar = () => {
+const Sidebar = ({ userRole }) => {
   const [isOpen, setIsOpen] = useState(false);
   const sidebarRef = useRef(null);
+  const {user} = useUser();
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -33,7 +35,7 @@ const Sidebar = () => {
 
   return (
     <div>
-     <div className='flex z-50 justify-start items-center py-8 sm:py-0 md:py-0 lg:py-0'>
+      <div className='flex z-50 justify-start items-center py-8 sm:py-0 md:py-0 lg:py-0'>
         <button 
           onClick={toggleSidebar} 
           aria-controls="default-sidebar" 
@@ -47,7 +49,6 @@ const Sidebar = () => {
           </svg>
         </button>
       </div>
-
 
       <aside 
         ref={sidebarRef}
@@ -68,57 +69,82 @@ const Sidebar = () => {
                 </div>
                 <div className="flex items-start justify-start flex-col pl-4">
                   <span className="text-lg text-blue-100 text-left">Hello,</span>
-                  <span className="text-lg text-white text-left">Raja Ram</span>
+                  <span className="text-lg text-white text-left">{user?.name}</span>
                 </div>
               </a>
               <div className="flex items-start justify-start flex-col pl-4 py-4">
                   <span className="text-sm text-gray-200 text-left">Grade : A++</span>
                   <span className="text-sm text-gray-200 text-left">Reg no : 234567008</span>
-                </div>
+              </div>
             </li>
 
+            {/* Shared link for all roles */}
             <li>
-              <NavLink
-                to="/"
-                className={({ isActive }) => isActive ? "flex items-center p-2 text-gray-900 rounded-2xl bg-cyan-200" : "flex items-center p-2 text-gray-900 rounded-2xl hover:bg-cyan-100 group"}
-                onClick={closeSidebar}
-              >
+              <NavLink to="/" onClick={closeSidebar} className={({ isActive }) => isActive ? "flex items-center p-2 text-gray-900 rounded-2xl bg-cyan-200" : "flex items-center p-2 text-gray-900 rounded-2xl hover:bg-cyan-100 group"}>
+               
+                <span className="ms-3">{userRole}</span>
+              </NavLink>
+            </li> 
+            <li>
+              <NavLink to="/" onClick={closeSidebar} className={({ isActive }) => isActive ? "flex items-center p-2 text-gray-900 rounded-2xl bg-cyan-200" : "flex items-center p-2 text-gray-900 rounded-2xl hover:bg-cyan-100 group"}>
                 <TbLayoutDashboardFilled className="h-[20px] w-[20px]" />
                 <span className="ms-3">Dashboard</span>
               </NavLink>
             </li>
-            <li>
-              <NavLink
-                to="/Exams"
-                className={({ isActive }) => isActive ? "flex items-center p-2 text-gray-900 rounded-2xl bg-cyan-200" : "flex items-center p-2 text-gray-900 rounded-2xl hover:bg-cyan-100 group"}
-                onClick={closeSidebar}
-              >
-                <HiAcademicCap className='w-[20px] h-[20px]'/>
-                <span className="flex-1 ms-3 whitespace-nowrap">Exams</span>
-                <span className="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-black bg-white border border-cyan-900 rounded-full">Pro</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/Results"
-                className={({ isActive }) => isActive ? "flex items-center p-2 text-gray-900 rounded-2xl bg-cyan-200" : "flex items-center p-2 text-gray-900 rounded-2xl hover:bg-cyan-100 group"}
-                onClick={closeSidebar}
-              >
-                <PiExamFill className='w-[20px] h-[20px]'/>
-                <span className="flex-1 ms-3 whitespace-nowrap">Results</span>
-                <span className="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-800 bg-white border border-cyan-900 rounded-full">3</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/feedback"
-                className={({ isActive }) => isActive ? "flex items-center p-2 text-gray-900 rounded-2xl bg-cyan-200" : "flex items-center p-2 text-gray-900 rounded-2xl hover:bg-cyan-100 group"}
-                onClick={closeSidebar}
-              >
-                <MdFeedback className='w-[20px] h-[20px]'/>
-                <span className="flex-1 ms-3 whitespace-nowrap">Feedback</span>
-              </NavLink>
-            </li>
+
+            {/* Links specific to 'TEACHER' role */}
+            {userRole === 'TEACHER' && (
+              <>
+                <li>
+                  <NavLink to="/Exams" onClick={closeSidebar} className={({ isActive }) => isActive ? "flex items-center p-2 text-gray-900 rounded-2xl bg-cyan-200" : "flex items-center p-2 text-gray-900 rounded-2xl hover:bg-cyan-100 group"}>
+                    <HiAcademicCap className="h-[20px] w-[20px]" />
+                    <span className="ms-3">Exams</span>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/Results" onClick={closeSidebar} className={({ isActive }) => isActive ? "flex items-center p-2 text-gray-900 rounded-2xl bg-cyan-200" : "flex items-center p-2 text-gray-900 rounded-2xl hover:bg-cyan-100 group"}>
+                    <PiExamFill className="h-[20px] w-[20px]" />
+                    <span className="ms-3">Results</span>
+                  </NavLink>
+                </li>
+              </>
+            )}
+
+            {/* Links specific to 'STUDENT' role */}
+            {userRole === 'STUDENT' && (
+              <>
+                <li>
+                  <NavLink to="/Results" onClick={closeSidebar} className={({ isActive }) => isActive ? "flex items-center p-2 text-gray-900 rounded-2xl bg-cyan-200" : "flex items-center p-2 text-gray-900 rounded-2xl hover:bg-cyan-100 group"}>
+                    <PiExamFill className="h-[20px] w-[20px]" />
+                    <span className="ms-3">Results</span>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/feedback" onClick={closeSidebar} className={({ isActive }) => isActive ? "flex items-center p-2 text-gray-900 rounded-2xl bg-cyan-200" : "flex items-center p-2 text-gray-900 rounded-2xl hover:bg-cyan-100 group"}>
+                    <MdFeedback className="h-[20px] w-[20px]" />
+                    <span className="ms-3">Feedback</span>
+                  </NavLink>
+                </li>
+              </>
+            )}
+
+            {/* Links specific to 'ADMIN' role */}
+            {userRole === 'ADMIN' && (
+              <>
+                <li>
+                  <NavLink to="/manage-users" onClick={closeSidebar} className={({ isActive }) => isActive ? "flex items-center p-2 text-gray-900 rounded-2xl bg-cyan-200" : "flex items-center p-2 text-gray-900 rounded-2xl hover:bg-cyan-100 group"}>
+                    <HiAcademicCap className="h-[20px] w-[20px]" />
+                    <span className="ms-3">Manage Users</span>
+                  </NavLink>
+                </li>
+                <li>
+                <NavLink to="/admin-dashboard" onClick={closeSidebar} className={({ isActive }) => isActive ? "flex items-center p-2 text-gray-900 rounded-2xl bg-cyan-200" : "flex items-center p-2 text-gray-900 rounded-2xl hover:bg-cyan-100 group"}>
+                    <TbLayoutDashboardFilled className="h-[20px] w-[20px]" />
+                    <span className="ms-3">Admin Dashboard</span>
+                  </NavLink>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </aside>
